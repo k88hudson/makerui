@@ -1,84 +1,60 @@
-//
-// Grid system
-// --------------------------------------------------
+@import "grid-base";
 
+// Base - no media query
+.generate-base-set(@base, @unit: 1) when (@unit =< @base) {
+    .unit-@{unit}-@{base} {
+        width: percentage(@unit/@base);
+        &:extend(.unit);
+    }
+    .generate-base-set(@base, (@unit + 1));
+}
 
-// Container widths
-//
-// Set the container width, and override it for fixed navbars in media queries.
+// With media query
+.generate-unit(@breakpoint, @base, @unit: 1) when (@unit =< @base) {
+    .unit-@{breakpoint}-@{unit}-@{base} {
+        width: percentage(@unit/@base);
+    }
+    .generate-unit(@breakpoint, @base, (@unit + 1));
+}
+.unit-base(@breakpoint, @base, @unit: 1) when (@unit =< @base) {
+    .unit-@{breakpoint}-@{unit}-@{base} {
+        &:extend(.unit);
+    }
+    .unit-base(@breakpoint, @base, (@unit + 1));
+}
+.generate-breakpoint-set(@query, @breakpoint) {
+    .unit-base(@breakpoint, 5);
+    .unit-base(@breakpoint, 24);
+    @media (min-width: @query) {
+        .generate-unit(@breakpoint, 5);
+        .generate-unit(@breakpoint, 24);
+    }
+}
 
+.container-width(@query) {
+    @media (min-width: @query) {
+        width: @query;
+    }
+}
 .container {
-  .container-fixed();
-
-  @media (min-width: @screen-sm-min) {
-    width: @container-sm;
-  }
-  @media (min-width: @screen-md-min) {
-    width: @container-md;
-  }
-  @media (min-width: @screen-lg-min) {
-    width: @container-lg;
-  }
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: @base-space;
+    padding-right: @base-space;
+    &:extend(.clearfix all);
+    .container-width(@screen-landscape);
+    .container-width(@screen-sm);
+    .container-width(@screen-md);
+    .container-width(@screen-lg);
 }
 
+.generate-base-set(5);
+.generate-base-set(24); // Is 24 necessary?
+.generate-breakpoint-set(@screen-portrait, portrait);
+.generate-breakpoint-set(@screen-landscape, landscape);
+.generate-breakpoint-set(@screen-sm, sm);
+.generate-breakpoint-set(@screen-md, md);
+.generate-breakpoint-set(@screen-lg, lg);
 
-// Fluid container
-//
-// Utilizes the mixin meant for fixed width containers, but without any defined
-// width for fluid, full width layouts.
-
-.container-fluid {
-  .container-fixed();
-}
-
-
-// Row
-//
-// Rows contain and clear the floats of your columns.
-
-.row {
-  .make-row();
-}
-
-
-// Columns
-//
-// Common styles for small and large grid columns
-
-.make-grid-columns();
-
-
-// Extra small grid
-//
-// Columns, offsets, pushes, and pulls for extra small devices like
-// smartphones.
-
-.make-grid(xs);
-
-
-// Small grid
-//
-// Columns, offsets, pushes, and pulls for the small device range, from phones
-// to tablets.
-
-@media (min-width: @screen-sm-min) {
-  .make-grid(sm);
-}
-
-
-// Medium grid
-//
-// Columns, offsets, pushes, and pulls for the desktop device range.
-
-@media (min-width: @screen-md-min) {
-  .make-grid(md);
-}
-
-
-// Large grid
-//
-// Columns, offsets, pushes, and pulls for the large desktop device range.
-
-@media (min-width: @screen-lg-min) {
-  .make-grid(lg);
-}
+// TODO:
+// push, pull

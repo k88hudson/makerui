@@ -18,6 +18,8 @@
     "gulp-webserver": "^0.8.8",
     "gulp-watch-less": "^0.2.1",
     "gulp-watch": "^3.0.0",
-    "gulp-plumber": "^0.6.6"
+    "gulp-plumber": "^0.6.6",
+    "gulp-filesize": "0.0.6",
+    "gulp-size": "^1.1.0"
   }
 }

@@ -6,6 +6,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var gutil = require('gulp-util');
 var webserver = require('gulp-webserver');
 var plumber = require('gulp-plumber');
+var size = require('gulp-size');
 
 gulp.task('build', function() {
     return gulp.src('./less/makerui.less')
@@ -24,6 +25,7 @@ gulp.task('build', function() {
             cascade: false,
             remove: false
         }))
+        .pipe(size())
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./demo/css'));
 });
