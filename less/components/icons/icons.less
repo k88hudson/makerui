@@ -1,0 +1,18 @@
+// depends on ionic icons
+.btn {
+    [class*=ion-] {
+        margin-left: -0.1em;
+        margin-right: (@button-h-padding / 2);
+    }
+    &.btn-icon {
+        padding: 0;
+        width: @button-size;
+        [class^=ion-] {
+            margin-left: 0;
+            margin-right: 0;
+        }
+        &.btn-block {
+            width: 100%;
+        }
+    }
+}
