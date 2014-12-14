@@ -39,6 +39,15 @@ https://github.com/yahoo/pure/blob/master/LICENSE.md
     
     display: flex;
     flex-flow: row wrap;
+
+    // We need this because we pad by default
+    margin-left: -@base-space;
+    margin-right: -@base-space;
+
+    &.grid-flush {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
 
 /* Opera as of 12 on Windows needs word-spacing.
@@ -60,6 +69,7 @@ https://github.com/yahoo/pure/blob/master/LICENSE.md
     vertical-align: top;
     text-rendering: auto;
     width: 100%; // Default width
+    padding: @base-space;
 }
 
 /*

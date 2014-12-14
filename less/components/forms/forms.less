@@ -1,0 +1,95 @@
+.form {
+
+    // Sections
+    .fieldset {
+        padding: (@base-space * 2);
+        border: 1px solid @light-grey;
+        margin: 0 0 (@base-space * 2) 0;
+    }
+
+    // Titles
+    .form-title {
+        margin: 0 0 @base-space 0;
+    }
+
+    .form-group {
+        margin: 0 0 (@base-space * 2) 0;
+    }
+
+    label {
+        display: block;
+    }
+    input,
+    textarea,
+    select {
+        border-radius: 0;
+        line-height: inherit;
+        font-size: inherit;
+        color: inherit;
+        display: block;
+        width: 100%;
+        border: 1px solid @light-grey;
+        &:focus {
+            outline: none;
+            border-color: @blue;
+        }
+    }
+
+    // Single line elements
+    // Line height is weird here.
+    input,
+    select {
+        padding: 0 @input-h-padding;
+        height: @input-height;
+    }
+
+    textarea {
+        line-height: 1.2;
+        padding: @input-h-padding;
+    }
+
+
+    // Errors
+    .err {
+        border-color: @light-red;
+        color: @light-red;
+        &:focus {
+            color: @black;
+            border-color: @red;
+        }
+    }
+    .err-message {
+        position: relative;
+        background: @light-red;
+        color: white;
+        padding: 5px 10px;
+        margin-top: -1px;
+        font-size: 0.8em;
+        .triangle-top(@light-red);
+    }
+
+    // Checkboxes. Radios
+    .checkbox,
+    .radio {
+        margin-bottom: @base-space;
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: auto;
+            height: auto;
+            display: inline-block;
+            position: absolute;
+            margin: 4px 0 0 -(@checkbox-indent);
+        }
+        label {
+            position: relative;
+            width: 100%;
+            padding-left: @checkbox-indent;
+            cursor: pointer;
+            padding-top: @base-space;
+            padding-bottom: @base-space;
+        }
+    }
+
+}
+
+

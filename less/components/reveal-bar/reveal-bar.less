@@ -1,0 +1,32 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: fade(@black, 80%);
+    transition: opacity 0.2s ease-in-out,
+        visibility 0.2s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    &.overlay-on {
+        opacity: 1;
+        visibility: visible;
+    }
+    z-index: 1000;
+}
+.reveal-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    background: white;
+    box-shadow: 0 5px 30px fade(@black, 50%);
+    transform: translateX(-300px);
+    transition: transform 0.2s ease-in-out;
+    &.reveal-bar-on {
+        transform: translateX(0);
+    }
+    z-index: 1001;
+}

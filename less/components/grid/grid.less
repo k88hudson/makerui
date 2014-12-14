@@ -33,12 +33,14 @@
 
 .container-width(@query) {
     @media (min-width: @query) {
-        width: @query;
+        width: @query - (2 * @base-space);
     }
 }
 .container {
     margin-right: auto;
     margin-left: auto;
+    padding-left: @base-space;
+    padding-right: @base-space;
     &:extend(.clearfix all);
     .container-width(@screen-landscape);
     .container-width(@screen-sm);
