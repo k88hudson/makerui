@@ -1,3 +1,20 @@
-.pad {
-    padding: @base-space;
+.spacing-set(@name, @spacing) {
+    .@{name} { padding: @spacing !important; }
+
+    // todo: Do we need all these
+    .@{name}-t { padding-top: @spacing !important;  }
+    .@{name}-b { padding-bottom: @spacing !important; }
+    .@{name}-r { padding-right: @spacing !important; }
+    .@{name}-l { padding-left: @spacing !important; }
+    .@{name}-h {
+        padding-left: @spacing !important;
+        padding-right: @spacing !important;
+    }
+    .@{name}-v {
+        padding-top: @spacing !important;
+        padding-bottom: @spacing !important;
+    }
 }
+
+.spacing-set(pad, @base-space);
+.spacing-set(pad-2x, (@base-space * 2));

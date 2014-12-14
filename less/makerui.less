@@ -9,11 +9,18 @@
 @import "components/grid/grid";
 @import "components/typography/typography";
 @import "components/buttons/buttons";
+@import "components/icons/icons";
 
 
 // Demo
 #grid {
     .grid > div {
-        border: 1px solid #CCC;
+        &:nth-child(even) {
+            background: fade(@blue, 5%);
+        }
+        &:nth-child(odd) {
+            background: fade(@blue, 20%);
+        }
+
     }
 }

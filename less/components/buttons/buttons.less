@@ -1,20 +1,68 @@
+
+.btn-color(
+    @color,
+    @shadow: fade(@color, 40%),
+    @contrast: contrast(@color, darken(@color, 25%), white),
+    @hover-color: contrast(@color, darken(@color, 5%), lighten(@color, 5%))) {
+        background: @color;
+        color: @contrast;
+        box-shadow: 0 6px 5px -5px @shadow;
+        &:hover,
+        &:focus,
+        &:active {
+            outline: none;
+            color: @contrast;
+            background-color: @hover-color;
+            box-shadow: 0 6px 5px -5px @shadow;
+        }
+}
+
 .btn {
     font-size: inherit;
     font-family: inherit;
-    background: @blue;
-    color: white;
     border: none;
-    height: 36px;
-    padding: 0 15px;
-    display: inline-flex;
+    height: @button-size;
+    line-height: @button-size;
+    padding: 0 @button-h-padding;
+  
     text-decoration: none;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0;
 
-    box-shadow: 0 6px 5px -5px fade(@blue, 40%);
-    &:hover {
-        color: white;
-        background-color: lighten(@blue, 5%);
-        box-shadow: 0 6px 5px -5px fade(@blue, 60%);
+    .btn-color(@blue);
+
+    &.btn-link {
+        .btn-color(none, transparent, @blue, lighten(@blue, 48%));
     }
+
+    &.btn-block {
+        display: block;
+        width: 100%;
+    }
+    
+    &.btn-white {
+        .btn-color(white, fade(@black, 10%), @blue, lighten(@blue, 48%));
+        border: 1px solid lighten(@blue, 40%);
+    }
+    &.btn-black {
+        .btn-color(@black);
+    }
+    &.btn-red {
+        .btn-color(@red);
+    }
+    &.btn-pink {
+        .btn-color(@pink);
+    }
+    &.btn-orange {
+        .btn-color(@orange);
+    }
+    &.btn-green {
+        .btn-color(@green);
+    }
+    &.btn-yellow {
+        .btn-color(@yellow);
+    }
+
 }
