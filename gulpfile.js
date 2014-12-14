@@ -8,15 +8,42 @@ var webserver = require('gulp-webserver');
 var plumber = require('gulp-plumber');
 var size = require('gulp-size');
 
-gulp.task('build', function() {
+var browserify = require('browserify');
+var buffer = require('vinyl-buffer');
+var source = require('vinyl-source-stream');
+var uglify = require('gulp-uglify');
+
+function handleErrors() {
+    return plumber({
+        errorHandler: function onError(err) {
+            gutil.log(gutil.colors.red(err));
+            gutil.beep();
+            this.emit('end');
+        }
+    });
+}
+
+gulp.task('js', function () {
+    var browserified = browserify('./js/demo.js', {
+        debug: true,
+        transform: ['reactify']
+    });
+
+    return browserified
+        .bundle()
+        .pipe(handleErrors())
+        .pipe(source('demo.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(uglify())
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./demo/js'));
+});
+
+
+gulp.task('less', function() {
     return gulp.src('./less/makerui.less')
-        .pipe(plumber({
-            errorHandler: function onError(err) {
-                gutil.log(gutil.colors.red(err));
-                gutil.beep();
-                this.emit('end');
-            }
-        }))
+        .pipe(handleErrors())
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(minifyCSS({keepBreaks:false}))
@@ -30,13 +57,18 @@ gulp.task('build', function() {
         .pipe(gulp.dest('./demo/css'));
 });
 
+gulp.task('build', ['js', 'less']);
+
 // Watch
-gulp.task('watch', ['build'], function () {
-    return gulp.watch('./less/**/*.less', ['build']);
+gulp.task('watchLess', ['less'], function () {
+    return gulp.watch('./less/**/*.less', ['less']);
+});
+gulp.task('watchJs', ['js'], function () {
+    return gulp.watch('./js/**/*.js', ['js']);
 });
 
 // Serve + Watch
-gulp.task('dev', ['watch'], function() {
+gulp.task('dev', ['watchLess', 'watchJs'], function() {
   return gulp.src('demo')
     .pipe(webserver({
         port: 1987,
