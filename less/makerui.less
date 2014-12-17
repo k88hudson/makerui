@@ -33,3 +33,147 @@
 
     }
 }
+
+.donate-wrapper {
+    padding: 40px;
+    background: #EAEFF2;
+}
+
+.donate-form {
+    background: white;
+    max-width: 420px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 30px 0;
+
+    nav,
+    .form {
+        padding: 0 30px;
+    }
+    nav > ol {
+        text-align: center;
+        list-style: none;
+        display: flex;
+        counter-reset: nav;
+        li {
+            counter-increment: nav;
+            width: 33.33%;
+            a {
+                padding: 0;
+                &.active::before {
+                    background: @blue;
+                    color: white;
+                }
+            }
+            a::before {
+                @_circle: 50px;
+                content: counter(nav);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: @_circle;
+                height: @_circle;
+                border-radius: @_circle;
+                margin: 0 auto 5px auto;
+
+                border: 5px solid #EAEFF2;
+                background: #EAEFF2;
+                color: @blue;
+            }
+        }
+    }
+    .btn.payment {
+        height: auto;
+        line-height: 1.4;
+        padding: 10px;
+        img {
+            width: 100%;
+        }
+    }
+    .slider {
+        width: 306%;
+        display: flex;
+        transition: margin-left 0.3s ease-in-out;
+        .slide {
+            width: 33.333%;
+            padding-right: 2%;
+        }
+    }
+}
+
+.btn.menu-btn {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    &:active,
+    &:focus {
+        background: @blue;
+    }
+    &.active {
+        color: white;
+    }
+}
+
+.reveal-content,
+.reveal-content-inner {
+    height: 100%;
+    overflow: hidden;
+}
+.route-inner {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.route-inner > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+.slideIn-enter,
+.slideIn-leave {
+    transition: transform 0.5s;
+}
+.slideIn-enter {
+  transform: translateX(100%);
+}
+
+.slideIn-enter.slideIn-enter-active {
+  transform: translateX(0%);
+}
+
+.slideIn-leave {
+  transform: translateX(0%);
+}
+
+.slideIn-leave.slideIn-leave-active {
+  transform: translateX(-100%);
+}
+
+.fadeIn-enter,
+.fadeIn-leave {
+    transition: opacity 0.5s;
+}
+.fadeIn-enter {
+  opacity: 0;
+}
+
+.fadeIn-enter.fadeIn-enter-active {
+  opacity: 1;
+}
+
+.fadeIn-leave {
+  opacity: 1;
+}
+
+.fadeIn-leave.fadeIn-leave-active {
+  opacity: 0;
+}
+
+@import "splash";
+

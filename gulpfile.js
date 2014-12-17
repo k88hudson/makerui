@@ -13,14 +13,13 @@ var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
 
+function onError(err) {
+    gutil.log(gutil.colors.red(err));
+    gutil.beep();
+    this.emit('end');
+}
 function handleErrors() {
-    return plumber({
-        errorHandler: function onError(err) {
-            gutil.log(gutil.colors.red(err));
-            gutil.beep();
-            this.emit('end');
-        }
-    });
+    return plumber({ errorHandler: onError });
 }
 
 gulp.task('js', function () {
@@ -31,7 +30,7 @@ gulp.task('js', function () {
 
     return browserified
         .bundle()
-        .pipe(handleErrors())
+        .on('error', onError)
         .pipe(source('demo.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))

@@ -1,4 +1,10 @@
 var React = require('react');
+var Router = require('react-router');
+var TransitionGroup = require('react/lib/ReactCSSTransitionGroup');
+
+var Route = Router.Route;
+var RouteHandler = Router.RouteHandler;
+var Link = Router.Link;
 
 // Utility functions
 function loop(n, callback) {
@@ -24,9 +30,10 @@ var DemoRow = React.createClass({
 
 var Grid = React.createClass({
     render: function () {
-        var classList = ['grid'];
-        if (this.props.flush) classList.push('grid-flush');
-        return <div className={classList.join(' ')}>{this.props.children}</div>;
+        var classList = 'grid';
+        if (this.props.flush) classList += ' grid-flush';
+        if (this.props.className) classList += (' ' + this.props.className);
+        return <div className={classList}>{this.props.children}</div>;
     }
 });
 
@@ -200,6 +207,7 @@ var Checkbox = React.createClass({
             errEl = <div className="err-message">{this.props.err}</div>
             classList.push('err');
         }
+        if (this.props.noPad) classList.push('no-pad');
         return (
             <div className={classList.join(' ')}>
                 <label for={this.props.name}>
@@ -246,25 +254,32 @@ var Radio = React.createClass({
     }
 });
 
+var countries = [
+    {name: 'Canada'},
+    {name: 'United States'},
+    {name: 'Germany'},
+    {name: 'United Kingdom'}
+];
+
+var provinces = [
+    {'short':'AB','name':'Alberta','country':'CA'},
+    {'short':'BC','name':'British Columbia','country':'CA'},
+    {'short':'LB','name':'Labrador','country':'CA'},
+    {'short':'MB','name':'Manitoba','country':'CA'},
+    {'short':'NB','name':'New Brunswick','country':'CA'},
+    {'short':'NF','name':'Newfoundland','country':'CA'},
+    {'short':'NS','name':'Nova Scotia','country':'CA'},
+    {'short':'NU','name':'Nunavut','country':'CA'},
+    {'short':'NW','name':'Northwest Territories','country':'CA'},
+    {'short':'ON','name':'Ontario','country':'CA'},
+    {'short':'PE','name':'Prince Edward Island','country':'CA'},
+    {'short':'QC','name':'Quebec','country':'CA'},
+    {'short':'SK','name':'Saskatchewen','country':'CA'},
+    {'short':'YU','name':'Yukon','country':'CA'}
+];
+
 var FormsDemo = React.createClass({
     render: function () {
-        var provinces = [
-            {'short':'AB','name':'Alberta','country':'CA'},
-            {'short':'BC','name':'British Columbia','country':'CA'},
-            {'short':'LB','name':'Labrador','country':'CA'},
-            {'short':'MB','name':'Manitoba','country':'CA'},
-            {'short':'NB','name':'New Brunswick','country':'CA'},
-            {'short':'NF','name':'Newfoundland','country':'CA'},
-            {'short':'NS','name':'Nova Scotia','country':'CA'},
-            {'short':'NU','name':'Nunavut','country':'CA'},
-            {'short':'NW','name':'Northwest Territories','country':'CA'},
-            {'short':'ON','name':'Ontario','country':'CA'},
-            {'short':'PE','name':'Prince Edward Island','country':'CA'},
-            {'short':'QC','name':'Quebec','country':'CA'},
-            {'short':'SK','name':'Saskatchewen','country':'CA'},
-            {'short':'YU','name':'Yukon','country':'CA'}
-        ];
-
         return (<section id="forms" className="container">
                 <h1>Forms</h1>
                 <form className="form">
@@ -332,16 +347,11 @@ var Swiper = require('react-swiper');
 
 var DemoNav = React.createClass({
     render: function () {
-        var links = [
-            'Documentation',
-            'CSS Base',
-            'CSS Components',
-            'React is cool. Shall we try wrapping to the next line?'
-        ];
+        var self = this;
         return (<ul className="nav">
             <li><span className="nav-title">Sections</span></li>
-            {links.map(function (link) {
-                return <li><a href="#">{link}</a></li>;
+            {routes.map(function (route) {
+                return <li><Link to={route.name} onClick={self.props.close}>{route.label}</Link></li>
             })}
         </ul>);
     }
@@ -365,23 +375,27 @@ var Reveal = React.createClass({
         }
     },
     onMenuToggle: function (e) {
-        e.preventDefault();
         this.setState({
             on: !this.state.on
         });
     },
     render: function () {
         var classList = ['reveal-wrapper'];
-        if (this.state.on) classList.push('reveal-on');
+        var btnClass = 'blue menu-btn';
+        if (this.state.on) {
+            classList.push('reveal-on');
+            btnClass += ' active';
+        }
+
         return (
             <Swiper className={classList.join(' ')} onSwipe={this.onSwipe}>
                 <nav className="reveal-bar">
-                    <DemoNav />
+                    <DemoNav close={this.onMenuToggle} />
                 </nav>
                 <div className="reveal-pusher" onClick={this.exitMenu}>
                     <div className="reveal-content">
                         <div className="reveal-content-inner">
-                            <Btn color="link" icon="navicon-round" onClick={this.onMenuToggle} />
+                            <Btn color={btnClass} icon="navicon-round" onClick={this.onMenuToggle} />
                             {this.props.children}
                         </div>
                     </div>
@@ -391,16 +405,225 @@ var Reveal = React.createClass({
     }
 });
 
-// Demo!
-var Demo = React.createClass({
+var Donate = React.createClass({
+    getInitialState: function () {
+        return {
+            slide: 0,
+            showAddress: false
+        };
+    },
+    next: function (next) {
+        var self = this;
+        var total = 3;
+        if (next === self.state.slide) return;
+        if (typeof next !== 'number') next = self.state.slide + 1;
+        if (next >= total) next = 0;
+        return function (e) {
+            e.preventDefault();
+            self.setState({slide: next});
+        };
+    },
+    getLeftPos: function() {
+        return -(this.state.slide * 100) + '%';
+    },
+    onCountryChange: function () {
+        this.setState({showAddress: true});
+    },
     render: function () {
-        return (<Reveal>
-                <TypographyDemo />
-                <ButtonsDemo />
-                <FormsDemo />
-                <GridDemo />
-        </Reveal>);
+        var self = this;
+        var sections = [
+            'Amount',
+            'Payment',
+            'Personal'
+        ].map(function (section, i) {
+            return <li>
+                <a href="#amount"
+                    className={self.state.slide === i ? 'active' : ''}
+                    onClick={self.next(i)}>{section}</a>
+            </li>
+        });
+
+        var addressClass = 'grid';
+        if (this.state.slide !== 2 || !this.state.showAddress) addressClass +=' hidden';
+
+        return (<div className="donate-wrapper"><div className="donate-form">
+                <nav>
+                    <ol className="nav">
+                        {sections}
+                    </ol>
+                </nav>
+                <div className="slider" style={{marginLeft: this.getLeftPos()}}>
+                    <div className="slide">
+                        <form className="form">
+                            <h3>Donate now</h3>
+                            <Grid>
+                                <Column base="12/24" sm="8/24"><Btn block color="white">$20</Btn></Column>
+                                <Column base="12/24" sm="8/24"><Btn block color="white">$10</Btn></Column>
+                                <Column base="12/24" sm="8/24"><Btn block color="white">$5</Btn></Column>
+                                <Column base="12/24" sm="8/24"><Btn block color="white">$3</Btn></Column>
+                                <Column sm="16/24"><input /></Column>
+                                <Column>
+                                    <Checkbox noPad name="monthly">Donate monthly</Checkbox>
+                                </Column>
+                                <Column>
+                                    <Btn onClick={this.next()}>Next</Btn>
+                                </Column>
+                            </Grid>
+                        </form>
+                    </div>
+                    <div className="slide">
+                        <form className="form">
+                            <h3>Payment</h3>
+                            <Grid>
+                                <Column sm="12/24"><Btn block color="white payment">
+                                    <img src="/images/visamastercard.png" />
+                                    Credit Card
+                                </Btn></Column>
+                                <Column sm="12/24"><Btn block color="white payment">
+                                        <img src="/images/paypal.png" />
+                                        Paypal
+                                </Btn></Column>
+                                <Column><Btn onClick={this.next()}>Next</Btn></Column>
+                            </Grid>
+                        </form>
+                    </div>
+                    <div className="slide">
+                        <form className="form">
+                            <h3>Personal</h3>
+                            <Grid>
+                                <Column landscape="12/24">
+                                    <input name="first" placeholder="First Name *" />
+                                </Column>
+                                <Column landscape="12/24">
+                                    <input name="last" placeholder="Last Name *" />
+                                </Column>
+                                <Column>
+                                    <select name="country" onChange={this.onCountryChange}>
+                                        <option selected>Country *</option>
+                                        {countries.map(function (data) {
+                                            return <option>{data.name}</option>;
+                                        })}
+                                    </select>
+                                </Column>
+                            </Grid>
+                            <div className={addressClass}>
+                                <Column>
+                                    <input name="ship-address" placeholder="Address *" />
+                                </Column>
+                                <Column landscape="12/24">
+                                    <input name="city" placeholder="City *" />
+                                </Column>
+                                <Column landscape="12/24">
+                                    <input name="postal-code" placeholder="Postal Code *" />
+                                </Column>
+                                <Column>
+                                    <select name="province">
+                                        <option selected>Province or Territory *</option>
+                                        {provinces.map(function (data) {
+                                            return <option>{data.name}</option>;
+                                        })}
+                                    </select>
+                                </Column>
+                                <Column>
+                                    <Checkbox>I’m okay with you handling this info as you explain in your privacy policy.</Checkbox>
+                                </Column>
+                                <Column><Btn onClick={this.next()}>Next</Btn></Column>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div></div>);
     }
 });
 
-React.render(<Demo />, document.getElementById('demo'));
+// CSS
+var CSS = React.createClass({
+    render: function () {
+        return (<div>
+            <TypographyDemo />
+            <ButtonsDemo />
+            <FormsDemo />
+            <GridDemo />
+        </div>);
+    }
+});
+
+var Base = React.createClass({
+    mixins: [ Router.State ],
+    render: function () {
+        var name = this.getRoutes().reverse()[0].name;
+        return (
+            <Reveal>
+                <TransitionGroup component="div" className="route-inner" transitionName="fadeIn">
+                    <RouteHandler key={name} />
+                </TransitionGroup>
+            </Reveal>
+        );
+    }
+});
+
+var Splash = React.createClass({
+    render: function () {
+        return (
+            <div>
+                <section className="hero">
+                    <Grid className="container">
+                        <Column>
+                            <h1>Dogs are great,<br /> don&rsquo;t you <em>totally</em> agree?</h1>
+                            <p className="subheading">I love dogs because they are super cute, cuddly,<br /> and they are really good company.</p>
+                            <Btn color="pink hero-btn" icon="heart">I agree</Btn>
+                            <Btn color="white hero-btn" icon="info">Learn more</Btn>
+                        </Column>
+                    </Grid>
+                </section>
+                <section className="main container">
+                    <Grid>
+                        <Column sm="8/24">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </Column>
+                        <Column sm="8/24">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </Column>
+                        <Column sm="8/24">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </Column>
+                    </Grid>
+                </section>
+            </div>
+        );
+    }
+});
+
+var routes = [
+    { name: 'css', path: '/css/', handler: CSS, label: 'CSS' },
+    { name: 'donate', path: '/donate/', handler: Donate, label: 'Donate' },
+    { name: 'splash', path: '/splash/', handler: Splash, label: 'Splash' }
+];
+
+var routeEls = (
+    <Route handler={Base}>
+        {routes.map(function (route) {
+            return <Route name={route.name} path={route.path} handler={route.handler} addHandlerKey={true} />
+        })}
+    </Route>
+);
+
+Router.run(routeEls, Router.HistoryLocation, function (Handler) {
+   React.render(<Handler />, document.getElementById('demo'));
+});
+
