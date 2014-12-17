@@ -1,0 +1,70 @@
+.bar {
+    position: relative;
+    background: white;
+    height: @bar-height;
+    line-height: (@bar-height - (2 * @bar-padding));
+    border-bottom: 1px solid @light-grey;
+
+    // Buttons
+    .btn {
+        line-height: inherit;
+        height: 100%;
+        font-size: 13px;
+        padding: 0 10px;
+        &.btn-icon {
+            padding: 0;
+            font-size: 27px;
+            width: (@bar-height - (2 * @bar-padding));
+        }
+    }
+
+    .title {
+        line-height: inherit;
+        font-size: 18px;
+    }
+    
+    // Sections
+    .bar-left,
+    .bar-right,
+    .bar-center {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        padding: @bar-padding;
+    }
+    .bar-center {
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 0;
+    }
+    .bar-left,
+    .bar-right {
+        text-align: left;
+        z-index: 1;
+        background: white;
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 10px;
+            height: 100%;
+        }
+    }
+    .bar-left {
+        left: 0;
+        padding-right: 0;
+        &::after {
+            left: 100%;
+            background: linear-gradient(to right, white 0%, fade(white, 0) 100%);
+        }
+    }
+    .bar-right {
+        right: 0;
+        padding-left: 0;
+        &::after {
+            right: 100%;
+            background: linear-gradient(to left, white 0%, fade(white, 0) 100%);
+        }
+    }
+}

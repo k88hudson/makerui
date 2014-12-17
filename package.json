@@ -25,13 +25,15 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.0.0",
     "gulp-uglify": "^1.0.2",
-    "es6ify": "^1.6.0"
+    "es6ify": "^1.6.0",
+    "gulp-shell": "^0.2.11"
   },
   "dependencies": {
     "react": "^0.12.1",
     "react-swiper": "^0.1.4",
     "react.animate": "^1.0.0",
     "install": "^0.1.8",
-    "react-router": "^0.11.5"
+    "react-router": "^0.11.5",
+    "watchify": "^2.2.1"
   }
 }

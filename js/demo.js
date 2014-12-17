@@ -343,8 +343,6 @@ var FormsDemo = React.createClass({
     }
 });
 
-var Swiper = require('react-swiper');
-
 var DemoNav = React.createClass({
     render: function () {
         var self = this;
@@ -388,7 +386,7 @@ var Reveal = React.createClass({
         }
 
         return (
-            <Swiper className={classList.join(' ')} onSwipe={this.onSwipe}>
+            <div className={classList.join(' ')}>
                 <nav className="reveal-bar">
                     <DemoNav close={this.onMenuToggle} />
                 </nav>
@@ -400,7 +398,17 @@ var Reveal = React.createClass({
                         </div>
                     </div>
                 </div>
-            </Swiper>
+            </div>
+        );
+    }
+});
+
+var InputGroup = React.createClass({
+    render: function () {
+        return (
+            <Grid className="input-group">
+                {this.props.children}
+            </Grid>
         );
     }
 });
@@ -485,6 +493,17 @@ var Donate = React.createClass({
                                 </Btn></Column>
                                 <Column><Btn onClick={this.next()}>Next</Btn></Column>
                             </Grid>
+                            <Grid>
+                                <Column>
+                                    <InputGroup icon-before="card" placeholder="Credit card number"/>
+                                </Column>
+                                <Column base="12/24">
+                                    <input placeholder="MM/YY"/>
+                                </Column>
+                                <Column base="12/24">
+                                    <input placeholder="CVC"/>
+                                </Column>
+                            </Grid>
                         </form>
                     </div>
                     <div className="slide">
@@ -536,6 +555,48 @@ var Donate = React.createClass({
     }
 });
 
+var MobileShell = React.createClass({
+    render: function () {
+        return (<div className="mobile-shell">
+            {this.props.children}
+        </div>);
+    }
+});
+
+var BarsDemo = React.createClass({
+    render: function () {
+        return (
+            <section id="bars" className="container">
+                <h1>Bars</h1>
+                <MobileShell>
+                    <div className="bar">
+                        <div className="bar-left">
+                            <Btn color="link btn-bar">Cancel</Btn>
+                        </div>
+                        <div className="bar-center">
+                            <div className="title">Bar</div>
+                        </div>
+                        <div className="bar-right">
+                            <Btn color="link btn-bar">Next</Btn>
+                        </div>
+                    </div>
+                    <div className="bar">
+                        <div className="bar-left">
+                            <Btn icon="navicon" color="link btn-bar" />
+                        </div>
+                        <div className="bar-center">
+                            <div className="title">Long title example that spills over</div>
+                        </div>
+                        <div className="bar-right">
+                            <Btn icon="android-arrow-forward" color="link btn-bar" />
+                        </div>
+                    </div>
+                </MobileShell>
+            </section>
+        );
+    }
+});
+
 // CSS
 var CSS = React.createClass({
     render: function () {
@@ -544,6 +605,7 @@ var CSS = React.createClass({
             <ButtonsDemo />
             <FormsDemo />
             <GridDemo />
+            <BarsDemo />
         </div>);
     }
 });
@@ -617,8 +679,8 @@ var routes = [
 
 var routeEls = (
     <Route handler={Base}>
-        {routes.map(function (route) {
-            return <Route name={route.name} path={route.path} handler={route.handler} addHandlerKey={true} />
+        {routes.map(function (route, i) {
+            return <Route key={i} name={route.name} path={route.path} handler={route.handler} addHandlerKey={true} />
         })}
     </Route>
 );

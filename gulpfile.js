@@ -7,11 +7,15 @@ var gutil = require('gulp-util');
 var webserver = require('gulp-webserver');
 var plumber = require('gulp-plumber');
 var size = require('gulp-size');
+var es6ify = require('es6ify');
+var watchify = require('watchify');
 
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
 var uglify = require('gulp-uglify');
+var reactify = require('reactify');
+var shell = require('gulp-shell');
 
 function onError(err) {
     gutil.log(gutil.colors.red(err));
@@ -21,6 +25,10 @@ function onError(err) {
 function handleErrors() {
     return plumber({ errorHandler: onError });
 }
+
+gulp.task('lol', shell.task([
+    'browserify -t [ reactify --es6 ] ./js/test.js > ./demo/js/test.js'
+]));
 
 gulp.task('js', function () {
     var browserified = browserify('./js/demo.js', {
