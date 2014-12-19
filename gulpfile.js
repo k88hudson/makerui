@@ -49,7 +49,7 @@ gulp.task('js', function () {
 
 
 gulp.task('less', function() {
-    return gulp.src('./less/makerui.less')
+    return gulp.src('./src/makerui.less')
         .pipe(handleErrors())
         .pipe(sourcemaps.init())
         .pipe(less())
@@ -68,10 +68,10 @@ gulp.task('build', ['js', 'less']);
 
 // Watch
 gulp.task('watchLess', ['less'], function () {
-    return gulp.watch('./less/**/*.less', ['less']);
+    return gulp.watch('./src/**/*.less', ['less']);
 });
 gulp.task('watchJs', ['js'], function () {
-    return gulp.watch('./js/**/*.js', ['js']);
+    return gulp.watch('./{js,src/components}/**/*.js', ['js']);
 });
 
 // Serve + Watch

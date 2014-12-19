@@ -1,0 +1,22 @@
+.bricks {
+        padding: 5px;
+    .brick {
+        position: relative;
+        padding: 10px;
+        border: 1px dashed #CCC;
+        margin-top: -1px;
+        &:first-child {
+           margin-top: 0;
+        }
+        .sort {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+
+            > .btn {
+                height: 100%
+            }
+        }
+   }
+}

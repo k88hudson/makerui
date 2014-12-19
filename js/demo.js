@@ -6,6 +6,13 @@ var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 var Link = Router.Link;
 
+var grid = require('../src/components/grid/grid');
+var Grid = grid.Grid;
+var Column = grid.Column;
+
+var Btn = require('../src/components/buttons/buttons');
+var Icon = require('../src/components/icons/icons');
+
 // Utility functions
 function loop(n, callback) {
     var els = [];
@@ -28,45 +35,7 @@ var DemoRow = React.createClass({
     }
 });
 
-var Grid = React.createClass({
-    render: function () {
-        var classList = 'grid';
-        if (this.props.flush) classList += ' grid-flush';
-        if (this.props.className) classList += (' ' + this.props.className);
-        return <div className={classList}>{this.props.children}</div>;
-    }
-});
 
-var Column = React.createClass({
-    render: function () {
-        var self = this;
-        var className = '';
-        var classes = [];
-        var unitBase = 'unit';
-        var breakpoints = ['base', 'portrait', 'landscape', 'sm', 'md', 'lg'];
-
-        breakpoints.forEach(function (breakpoint) {
-            var split;
-            var breakpointClass;
-            if (self.props[breakpoint]) {
-                split = self.props[breakpoint].split('/');
-                breakpointClass = breakpoint === 'base' ? '' : ('-' + breakpoint);
-                classes.push(unitBase + breakpointClass + '-' + split[0] + '-' + split[1]);
-            }
-        });
-
-        // If no breakpoints were set, just add base 'unit' class
-        if (!classes.length) classes.push('unit');
-
-        // Join!
-        className = classes.join(' ');
-
-        // Extra classes
-        if (this.props.className) className += (' ' + this.props.className);
-
-        return <div className={className}>{this.props.children}</div>;
-    }
-});
 
 var GridDemo = React.createClass({
     render: function () {
@@ -132,29 +101,6 @@ var TypographyDemo = React.createClass({
                 </ul>
             </section>
         );
-    }
-});
-
-var Btn = React.createClass({
-    render: function () {
-        var className = 'btn';
-        var iconEl;
-
-        if (this.props.color) className += (' btn-' + this.props.color);
-        if (this.props.icon && !this.props.children) className += ' btn-icon';
-        if (this.props.block) className += ' btn-block';
-        if (this.props.className) className += (' ' + this.props.ClassName);
-
-        if (this.props.icon) iconEl = <Icon type={this.props.icon} />;
-        return (
-            <button className={className} onClick={this.props.onClick}>{iconEl}{this.props.children}</button>
-        );
-    }
-});
-
-var Icon = React.createClass({
-    render: function () {
-        return <span className={'ion-' + this.props.type}></span>;
     }
 });
 
@@ -355,6 +301,7 @@ var DemoNav = React.createClass({
     }
 });
 
+
 var Reveal = React.createClass({
     getInitialState: function () {
         return {
@@ -364,13 +311,6 @@ var Reveal = React.createClass({
     exitMenu: function() {
         if (!this.state.on) return;
         this.setState({ on: false });
-    },
-    onSwipe: function (e) {
-        if (e.type === 'swipeLeft') {
-            this.setState({ on: false });
-        } else if (e.type === 'swipeRight') {
-            this.setState({ on: true });
-        }
     },
     onMenuToggle: function (e) {
         this.setState({
@@ -388,12 +328,23 @@ var Reveal = React.createClass({
         return (
             <div className={classList.join(' ')}>
                 <nav className="reveal-bar">
-                    <DemoNav close={this.onMenuToggle} />
+                    <DemoNav close={this.exitMenu} />
                 </nav>
                 <div className="reveal-pusher" onClick={this.exitMenu}>
                     <div className="reveal-content">
+                        <div className="bar">
+                            <div className="bar-left">
+                                <Btn onClick={this.onMenuToggle} icon="android-menu" color="link btn-bar" />
+                            </div>
+                            <div className="bar-center">
+                                <div className="title">Maker UI</div>
+                            </div>
+                            <div className="bar-right">
+                               
+                                <Btn icon="android-arrow-forward" color="link btn-bar" />
+                            </div>
+                        </div>
                         <div className="reveal-content-inner">
-                            <Btn color={btnClass} icon="navicon-round" onClick={this.onMenuToggle} />
                             {this.props.children}
                         </div>
                     </div>
@@ -555,47 +506,50 @@ var Donate = React.createClass({
     }
 });
 
-var MobileShell = React.createClass({
-    render: function () {
-        return (<div className="mobile-shell">
-            {this.props.children}
-        </div>);
-    }
-});
 
 var BarsDemo = React.createClass({
     render: function () {
         return (
-            <section id="bars" className="container">
+            <section id="bars">
                 <h1>Bars</h1>
-                <MobileShell>
-                    <div className="bar">
-                        <div className="bar-left">
-                            <Btn color="link btn-bar">Cancel</Btn>
-                        </div>
-                        <div className="bar-center">
-                            <div className="title">Bar</div>
-                        </div>
-                        <div className="bar-right">
-                            <Btn color="link btn-bar">Next</Btn>
-                        </div>
+                <div className="bar">
+                    <div className="bar-left">
+                        <Btn icon="navicon" color="link btn-bar" />
                     </div>
-                    <div className="bar">
-                        <div className="bar-left">
-                            <Btn icon="navicon" color="link btn-bar" />
-                        </div>
-                        <div className="bar-center">
-                            <div className="title">Long title example that spills over</div>
-                        </div>
-                        <div className="bar-right">
-                            <Btn icon="android-arrow-forward" color="link btn-bar" />
-                        </div>
+                    <div className="bar-center">
+                        <div className="title">Bar</div>
                     </div>
-                </MobileShell>
+                    <div className="bar-right">
+                        <Btn color="link btn-bar">Next</Btn>
+                    </div>
+                </div>
+                <div className="bar">
+                    <div className="bar-left">
+                        <Btn color="link btn-bar">Cancel</Btn>
+                    </div>
+                    <div className="bar-center">
+                        <div className="title">Long title example that spills over</div>
+                    </div>
+                    <div className="bar-right">
+                        <Btn icon="android-arrow-forward" color="link btn-bar" />
+                    </div>
+                </div>
+                <div className="bar">
+                    <div className="bar-left">
+                        <Btn icon="navicon" color="white btn-bar" />
+                    </div>
+                    <div className="bar-center">
+                        <div className="title">Buttons</div>
+                    </div>
+                    <div className="bar-right">
+                        <Btn icon="checkmark" color="blue btn-bar">Save</Btn>
+                    </div>
+                </div>
             </section>
         );
     }
 });
+
 
 // CSS
 var CSS = React.createClass({
@@ -614,8 +568,9 @@ var Base = React.createClass({
     mixins: [ Router.State ],
     render: function () {
         var name = this.getRoutes().reverse()[0].name;
+        var demoNav = <DemoNav close={this.onMenuToggle} />;
         return (
-            <Reveal>
+            <Reveal nav={demoNav}>
                 <TransitionGroup component="div" className="route-inner" transitionName="fadeIn">
                     <RouteHandler key={name} />
                 </TransitionGroup>
@@ -671,8 +626,13 @@ var Splash = React.createClass({
     }
 });
 
+
+
+var Mobile = require('./mobile');
+
 var routes = [
     { name: 'css', path: '/css/', handler: CSS, label: 'CSS' },
+    { name: 'mobile', path: '/mobile/', handler: Mobile, label: 'Mobile'},
     { name: 'donate', path: '/donate/', handler: Donate, label: 'Donate' },
     { name: 'splash', path: '/splash/', handler: Splash, label: 'Splash' }
 ];

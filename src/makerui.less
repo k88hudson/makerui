@@ -6,6 +6,8 @@
 @import "core/spacing";
 @import "core/utilities";
 
+@import "core/fonts";
+
 @import "components/grid/grid";
 @import "components/typography/typography";
 @import "components/buttons/buttons";
@@ -14,15 +16,21 @@
 @import "components/bars/bars";
 @import "components/reveal-bar/reveal-bar";
 
+@import "ionicons/ionicons";
+
 
 // Demo
 
 .mobile-shell {
-    width: 384px;
-    height: 640px;
-    margin: 0 auto;
-    border: 20px solid #444;
+    @media (min-width: @screen-sm) {
+        width: 384px;
+        min-height: 640px;
+        margin: 0 auto;
+        border: 20px solid #444;
+    }
 }
+
+@import 'mobile-demo';
 
 // needed for revealbar
 #demo {

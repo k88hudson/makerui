@@ -11,10 +11,21 @@
         height: 100%;
         font-size: 13px;
         padding: 0 10px;
+        box-shadow: none;
         &.btn-icon {
             padding: 0;
-            font-size: 27px;
             width: (@bar-height - (2 * @bar-padding));
+            font-size: 20px;
+        }
+        &.btn-link {
+            font-size: 16px;
+            &.btn-icon {
+                font-size: 32px;
+                line-height: 32px;
+            }
+        }
+        + .btn {
+            margin-left: 5px;
         }
     }
 
